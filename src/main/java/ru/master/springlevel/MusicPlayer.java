@@ -2,31 +2,53 @@ package ru.master.springlevel;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Random;
 
-@Component
 public class MusicPlayer {
   private Music music;
   private Music music1;
   Random r = new Random();
   int bound = 3;
 
-  @Autowired
+  @Value("${musicPlayer.volume}")
+  private int volume;
+
+  @Value("${musicPlayer.songName}")
+  private String songName;
+
   public MusicPlayer(@Qualifier("metalMusic") Music music,
                      @Qualifier("danceMusic") Music music1) {
     this.music = music;
     this.music1 = music1;
   }
 
-  public void playSound(){
-    System.out.println("Плеер играет: " + music.getSong()[r.nextInt(bound)]);
+  @PostConstruct
+  public void Init() {
+    System.out.println(this.getClass().getName() + " Init");
   }
 
-  public String playMasterSound(selectorSong sel_song){
+  @PreDestroy
+  public void Deconstruct() {
+    System.out.println(this.getClass().getName() + " Deconstruct");
+  }
+
+  public int getVolume() {
+    return volume;
+  }
+
+  public String getSongName() {
+    return songName;
+  }
+
+  public String playMasterSound(selectorSong sel_song) {
     return "Плеер играет: " +
         (sel_song.equals(selectorSong.METAL) ? music.getSong()[r.nextInt(bound)]
-        : music1.getSong()[r.nextInt(bound)]);
+            : music1.getSong()[r.nextInt(bound)]);
   }
 }
