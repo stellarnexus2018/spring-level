@@ -32,6 +32,7 @@ public class SpringLevelApplication {
 		try {
 			cpxac = new AnnotationConfigApplicationContext(SpringConfig.class);
 
+
 		} finally {
 			cpxac.close();
 
